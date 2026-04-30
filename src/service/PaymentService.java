@@ -7,11 +7,11 @@ public class PaymentService {
 
     /**
      * PAYMENT RELEASE RULES:
-     * Rule 1 → Latest inspection must be APPROVED
-     * Rule 2 → Average public rating must be >= 3
-     * If both pass → payment RELEASED + milestone marked PAID
-     * If any fail  → payment stays HOLD
-     * Uses transaction → either ALL updates succeed or NONE do
+     * Rule 1 - Latest inspection must be APPROVED
+     * Rule 2 - Average public rating must be >= 3
+     * If both pass - payment RELEASED + milestone marked PAID
+     * If any fail  - payment stays HOLD
+     * Uses transaction - either ALL updates succeed or NONE do
      */
     public String releasePayment(int milestoneId) {
         Connection conn = null;
@@ -20,7 +20,7 @@ public class PaymentService {
             conn = DBConnection.getConnection();
             conn.setAutoCommit(false); // START TRANSACTION
 
-            // ── RULE 1: Check latest inspection result ──
+            // -- RULE 1: Check latest inspection result --
             String inspSql =
                 "SELECT result FROM inspections " +
                 "WHERE milestone_id = ? " +
@@ -41,7 +41,7 @@ public class PaymentService {
                 return "HOLD|Inspection status is " + inspResult + ". Must be APPROVED.";
             }
 
-            // ── RULE 2: Check average public rating ──
+            // -- RULE 2: Check average public rating --
             String ratingSql =
                 "SELECT COALESCE(AVG(f.rating), 0) as avg_rating " +
                 "FROM public_feedback f " +
@@ -63,7 +63,7 @@ public class PaymentService {
                      + "/5. Minimum 3.0 required.";
             }
 
-            // ── BOTH RULES PASSED → Release Payment ──
+            // -- BOTH RULES PASSED - Release Payment --
 
             // Step 1: Update payment status to RELEASED
             String updatePaymentSql =
@@ -80,7 +80,7 @@ public class PaymentService {
             milPs.setInt(1, milestoneId);
             milPs.executeUpdate();
 
-            conn.commit(); // COMMIT TRANSACTION ✅
+            conn.commit(); // COMMIT TRANSACTION [OK]
             return "RELEASED|Payment successfully released for milestone #"
                  + milestoneId
                  + " (Rating: " + String.format("%.1f", avgRating) + "/5)";
@@ -135,8 +135,8 @@ public class PaymentService {
             if (ratingRs.next()) avgRating = ratingRs.getDouble("avg_rating");
 
             // Build eligibility report
-            String inspIcon   = inspResult.equals("APPROVED") ? "✅" : "❌";
-            String ratingIcon = avgRating >= 3.0             ? "✅" : "❌";
+            String inspIcon   = inspResult.equals("APPROVED") ? "[OK]" : "[FAIL]";
+            String ratingIcon = avgRating >= 3.0             ? "[OK]" : "[FAIL]";
 
             return  inspIcon   + " Inspection : " + inspResult + "\n" +
                     ratingIcon + " Public Rating: " + String.format("%.1f", avgRating) + "/5" +

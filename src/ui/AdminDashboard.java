@@ -57,24 +57,24 @@ public class AdminDashboard extends JFrame {
     public AdminDashboard(User user) {
         this.user = user;
 
-        setTitle("NIRIKSHAN — Admin Dashboard");
+        setTitle("NIRIKSHAN - Admin Dashboard");
         setSize(1200, 720);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setBackground(Theme.BG_MAIN);
 
-        // ── Root layout ──
+        // -- Root layout --
         JPanel root = new JPanel(new BorderLayout());
         root.setBackground(Theme.BG_MAIN);
         setContentPane(root);
 
-        // ── Sidebar NavBar ──
+        // -- Sidebar NavBar --
         NavBar navBar = new NavBar(user, NAV_ITEMS, "Dashboard", section -> {
             showSection(section);
         });
         root.add(navBar, BorderLayout.WEST);
 
-        // ── Content Area ──
+        // -- Content Area --
         contentArea = new JPanel(new BorderLayout());
         contentArea.setBackground(Theme.BG_MAIN);
         root.add(contentArea, BorderLayout.CENTER);
@@ -84,7 +84,7 @@ public class AdminDashboard extends JFrame {
         setVisible(true);
     }
 
-    // ── Route sections ──
+    // -- Route sections --
    private void showSection(String section) {
     contentArea.removeAll();
     try {
@@ -114,9 +114,9 @@ public class AdminDashboard extends JFrame {
     contentArea.repaint();
 }
 
-    // ══════════════════════════════════════════
-    // SECTION 1 — Dashboard (Stats Overview)
-    // ══════════════════════════════════════════
+    // =====================================
+    // SECTION 1 - Dashboard (Stats Overview)
+    // =====================================
     private JPanel buildDashboard() {
         JPanel panel = new JPanel();
         panel.setBackground(Theme.BG_MAIN);
